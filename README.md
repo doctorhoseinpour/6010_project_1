@@ -31,8 +31,8 @@ Each dataset has its own folder with SQL and Neo4j queries:
 
 ### Graph DB (Neo4j)
 1. Follow the Neo4j dataset guides:  
-   - [Neo4j Recommendations Dataset](https://github.com/neo4j-graph-examples/recommendations/tree/main)  
-   - [Neo4j Northwind Dataset](https://github.com/neo4j-graph-examples/northwind)  
+   - [Recommendations Dataset](https://github.com/neo4j-graph-examples/recommendations/tree/main)  
+   - [Northwind Dataset](https://github.com/neo4j-graph-examples/northwind)  
 2. Load queries from **`neo4j_queries.csv`**.  
 3. Measure execution time and compare against relational queries.  
 
