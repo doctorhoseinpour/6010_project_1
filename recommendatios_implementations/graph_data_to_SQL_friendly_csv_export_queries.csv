@@ -1,0 +1,67 @@
+name,description,query,id,parentId,isFolder
+export_persons_code,,"MATCH (p:Person)
+RETURN 
+  id(p) AS id,
+  p.bio AS bio,
+  p.born AS born,
+  p.bornIn AS bornIn,
+  p.died AS died,
+  p.imdbId AS imdbId,
+  p.name AS name,
+  p.poster AS poster,
+  p.tmdbId AS tmdbId,
+  p.url AS url,
+  CASE WHEN p:Actor THEN 1 ELSE 0 END AS actor,
+  CASE WHEN p:Director THEN 1 ELSE 0 END AS director;
+",0,,false
+export_movie_code,,"MATCH (m:Movie)
+RETURN 
+  id(m) AS id,
+  m.budget AS budget,
+  m.countries AS countries,
+  m.imdbId AS imdbId,
+  m.imdbRating AS imdbRating,
+  m.imdbVotes AS imdbVotes,
+  m.languages AS languages,
+  m.movieId AS movieId,
+  m.plot AS plot,
+  m.poster AS poster,
+  m.released AS released,
+  m.revenue AS revenue,
+  m.runtime AS runtime,
+  m.title AS title,
+  m.tmdbId AS tmdbId,
+  m.url AS url,
+  m.year AS year;
+",1,,false
+export_acted_in_code,,"MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
+RETURN 
+  id(p) AS person_id,
+  id(m) AS movie_id;
+",2,,false
+export_directed_query,,"MATCH (p:Person)-[:DIRECTED]->(m:Movie)
+RETURN 
+  id(p) AS person_id,
+  id(m) AS movie_id;
+",3,,false
+export_user_code,,"MATCH (u:User)
+RETURN 
+  id(u) AS id,
+  u.userId AS userId,
+  u.name AS name;
+",4,,false
+export_genre_code,,"MATCH (g:Genre)
+RETURN 
+  id(g) AS id,
+  g.name AS name;
+",5,,false
+export_in_genre_rel_code,,"MATCH (m:Movie)-[:IN_GENRE]->(g:Genre)
+RETURN 
+  id(m) AS movie_id,
+  id(g) AS genre_id;
+",6,,false
+export_rated_rel_code,,"MATCH (u:User)-[:RATED]->(m:Movie)
+RETURN 
+  id(u) AS user_id,
+  id(m) AS movie_id;
+",7,,false
