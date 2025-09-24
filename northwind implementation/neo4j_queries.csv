@@ -1,0 +1,38 @@
+name,description,query,id,parentId,isFolder
+n_simple_lookup,,"MATCH (c:Customer {contactName: ""Maria Anders""})
+RETURN c;",0,,false
+n_one_hop,,"MATCH (s:Supplier {companyName: ""Exotic Liquids""})-[:SUPPLIES]->(p:Product)
+RETURN p.productName, p.unitPrice;",1,,false
+n_two_hop_1,,"MATCH (c:Customer {contactName: ""Maria Anders""})-[:PURCHASED]->(o:Order)
+MATCH (o)-[od:ORDERS]->(p:Product)
+RETURN o.orderID AS orderID, p.productName AS productName, od.quantity AS quantity
+ORDER BY orderID, productName;",2,,false
+n_two_hop_2,,"MATCH (c:Category {categoryName: ""Beverages""})<-[:PART_OF]-(p:Product)<-[:SUPPLIES]-(s:Supplier)
+RETURN DISTINCT s.companyName
+ORDER BY s.companyName;",3,,false
+n_agg_1,,"MATCH (c:Category)<-[:PART_OF]-(p:Product)
+RETURN c.categoryName AS category, COUNT(p) AS product_count
+ORDER BY product_count DESC, category;",4,,false
+n_agg_2,,"MATCH (c:Customer)-[:PURCHASED]->(o:Order)
+RETURN c.contactName AS customer, COUNT(o) AS order_count
+ORDER BY order_count DESC, customer
+LIMIT 5;",5,,false
+n_time_1,,"MATCH (c:Customer)-[:PURCHASED]->(o:Order)
+WHERE o.orderDate STARTS WITH ""1997""
+RETURN o.orderID AS orderID, o.orderDate AS orderDate, c.contactName AS customer
+ORDER BY orderDate, orderID;",6,,false
+n_time_2,,"MATCH (o:Order)
+WHERE o.orderDate STARTS WITH ""1997""
+WITH substring(o.orderDate, 5, 2) AS month
+RETURN month, COUNT(*) AS order_count
+ORDER BY toInteger(month);",7,,false
+n_rec_1,,"MATCH (p1:Product {productName: ""Chai""})<-[:ORDERS]-(o:Order)-[:ORDERS]->(p2:Product)
+WHERE p2 <> p1
+RETURN p2.productName AS product, COUNT(*) AS freq
+ORDER BY freq DESC, product
+LIMIT 5;",8,,false
+n_rec_2,,"MATCH (c1:Customer {contactName: ""Maria Anders""})-[:PURCHASED]->(:Order)-[:ORDERS]->(p:Product)
+MATCH (p)<-[:ORDERS]-(:Order)<-[:PURCHASED]-(c2:Customer)
+WHERE c2 <> c1
+RETURN c2.contactName AS customer, COUNT(DISTINCT p) AS common_products
+ORDER BY common_products DESC, customer;",9,,false

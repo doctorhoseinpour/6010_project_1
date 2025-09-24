@@ -1,0 +1,44 @@
+name,description,query,id,parentId,isFolder
+rec_simple_lookup,,"MATCH (p:Person {name: 'Tom Hanks'}) RETURN p;
+",0,,false
+rec_one_hop,,"MATCH (p:Person {name: 'Tom Hanks'})-[:ACTED_IN]->(m:Movie)
+RETURN m.title, m.year, m.imdbRating;",1,,false
+rec_two_hop_1,,"MATCH (p1:Person {name: 'Tom Hanks'})-[:ACTED_IN]->(m:Movie)<-[:ACTED_IN]-(p2:Person {name: 'Meg Ryan'})
+RETURN m.title, m.year;",2,,false
+rec_two_hop_2,,"MATCH (p1:Person {name: 'Tom Hanks'})-[:ACTED_IN]->(m:Movie)<-[:ACTED_IN]-(p2:Person)
+WHERE p1 <> p2
+RETURN DISTINCT p2.name as coactor;",3,,false
+rec_aggr_1,,"MATCH (g:Genre)<-[:IN_GENRE]-(m:Movie)
+RETURN g.name, count(m) as movie_count
+ORDER BY movie_count DESC;",4,,false
+rec_aggr_2,,"MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
+RETURN p.name, count(m) as movie_count
+ORDER BY movie_count DESC
+LIMIT 10;",5,,false
+rec_time_1,,"MATCH (m:Movie)-[:IN_GENRE]->(g:Genre {name: 'Action'})
+WHERE m.year >= 1990 AND m.year <= 1999 AND m.imdbRating > 7.0
+RETURN m.title, m.year, m.imdbRating
+ORDER BY m.imdbRating DESC;
+",6,,false
+rec_time_2,,"MATCH (m:Movie)-[:IN_GENRE]->(g:Genre)
+WHERE m.year IS NOT NULL
+RETURN g.name,
+       CASE 
+           WHEN m.year < 1980 THEN 'Pre-1980'
+           WHEN m.year < 1990 THEN '1980s'
+           WHEN m.year < 2000 THEN '1990s'
+           WHEN m.year < 2010 THEN '2000s'
+           ELSE '2010s+'
+       END as era,
+       count(m) as movie_count
+ORDER BY g.name, era;",7,,false
+rec_rec_1,,"MATCH (u:User {name: 'Angela Thompson'})-[:RATED]->(m1:Movie)-[:IN_GENRE]->(g:Genre)
+MATCH (g)<-[:IN_GENRE]-(m2:Movie)
+WHERE NOT (u)-[:RATED]->(m2) AND m2.imdbRating > 7.0
+RETURN DISTINCT m2.title, m2.imdbRating, g.name as genre
+ORDER BY m2.imdbRating DESC
+LIMIT 10;",8,,false
+rec_rec_2,,"MATCH (u1:User {name: 'Angela Thompson'})-[:RATED]->(m:Movie)<-[:RATED]-(u2:User)
+WHERE u1 <> u2
+RETURN u2.name, count(m) as common_ratings
+ORDER BY common_ratings DESC;",9,,false
