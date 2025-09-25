@@ -28,7 +28,7 @@ Each dataset has its own folder with SQL and Neo4j queries:
 
 ### Relational DB (MySQL)
 1. Create the SQL schema by running the corresponding sql_schema_creation.sql file for each dataset.
-2. Import the CSV files from the dataset’s "data" folder into the corresponding SQL tables.  
+2. Import the CSV files from the dataset’s "data" folder into the corresponding SQL tables using the MySQL Workbench user interface.  
 3. Execute **`sql_queries.sql`** to reproduce results and measure execution time.  
 
 ### Graph DB (Neo4j)
